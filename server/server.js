@@ -1,20 +1,19 @@
 const express = require("express");
 const http = require('http')
 const app = express()
-let server = http.createServer(app)
+const server = http.createServer(app);
+const {Server} = require('socket.io')
+const io = new Server(server);
 const path = require("path")
 const PORT = process.env.PORT || '3000';
 const HOSTNAME = process.env.HOSTNAME || 'localhost';
 
 const publicPath = path.join(__dirname, "/../public")
 
-app.use(express.static(publicPath))
+app.get('/', (req, res) => {
+    res.sendFile(publicPath + '/index.html');
+  });
 
-
-const io = require('socket.io')(http, {
-    cors: {origin: "*"}
-
-});
 
 io.on('connection', (socket) => {
     console.log('a user connected')
